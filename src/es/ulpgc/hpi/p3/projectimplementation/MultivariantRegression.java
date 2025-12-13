@@ -1,20 +1,54 @@
 package es.ulpgc.hpi.p3.projectimplementation;
 
 import java.util.List;
-public class MultivariantRegression extends RegressionAnalysis{
+
+/**
+ * Represents a regression analysis that uses multiple independent variables to predict the outcome.
+ * It simulates the calculation process and updates the model's accuracy R2 metric.
+ */
+public class MultivariantRegression extends RegressionAnalysis {
+
     private List<String> independentVariables;
+    private List<Double> coefficients;
 
-    public MultivariantRegression(String resultSummary, Double executionTime, String dependentVariable, double rSquared, List<String> independentVariables) {
-        super(resultSummary, executionTime, dependentVariable, rSquared);
+    public MultivariantRegression(Database database, AnalysisTopic theme, String dependentVariable, List<String> independentVariables) {
+        super(database, theme, dependentVariable);
         this.independentVariables = independentVariables;
     }
 
-    public List<String> getIndependentVariables() {
-        return independentVariables;
+    @Override
+    public void runAnalysis() {
+        setStatus(AnalysisStatus.Running);
+        long startTime = System.currentTimeMillis();
+
+        try {
+            executeSimulation();
+            long endTime = System.currentTimeMillis();
+            finalizeSuccess(startTime, endTime);
+        } catch (InterruptedException e) {
+            handleFailure();
+        }
     }
 
-    public void setIndependentVariables(List<String> independentVariables) {
-        this.independentVariables = independentVariables;
+    private void executeSimulation() throws InterruptedException {
+        Thread.sleep(1500);
+        this.rSquared = 0.92;
+    }
+
+    private void finalizeSuccess(long startTime, long endTime) {
+        String summary = generateSummary();
+        setResultSummary(summary);
+        setExecutionTime((double) (endTime - startTime));
+        setStatus(AnalysisStatus.Completed);
+    }
+
+    private String generateSummary() {
+        return "Multivariant model calculated using " + independentVariables.size() + " variables.";
+    }
+
+    private void handleFailure() {
+        setStatus(AnalysisStatus.Failed);
     }
 }
+
 

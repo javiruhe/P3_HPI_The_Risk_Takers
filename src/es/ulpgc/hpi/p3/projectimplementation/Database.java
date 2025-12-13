@@ -2,20 +2,63 @@ package es.ulpgc.hpi.p3.projectimplementation;
 
 import java.util.Date;
 
+/**
+ * Represents a dataset with metadata such as source path, size, and update status.
+ * It provides a method to clean the data and filter it based on a given criteria.
+ */
 public class Database {
+
     private static int ID = 0;
+
     private final int id;
-    private final Boolean isTidy;
     private final int size;
     private final String sourcePath;
     private final Date lastUpdate;
+    private final FileType fileType;
 
-    public Database(Boolean isTidy, int size, String sourcePath, Date lastUpdate) {
+    private Boolean isTidy;
+
+    public Database(Boolean isTidy, int size, String sourcePath, Date lastUpdate, FileType fileType) {
         this.id = ++ID;
         this.isTidy = isTidy;
         this.size = size;
         this.sourcePath = sourcePath;
         this.lastUpdate = lastUpdate;
+        this.fileType = fileType;
+    }
+
+    public void cleanData() {
+        if (this.isTidy) {
+            printAlreadyCleanMessage();
+        } else {
+            performCleaning();
+        }
+    }
+
+    private void printAlreadyCleanMessage() {
+        System.out.println("Database (ID: " + id + ") is already tidy. No action needed.");
+    }
+
+    private void performCleaning() {
+        System.out.println("Cleaning data from: " + sourcePath + "...");
+        this.isTidy = true;
+        System.out.println("Data cleaning completed. Status set to Tidy.");
+    }
+
+    public void filterBy(String criteria) {
+        checkTidinessBeforeFilter();
+        applyFilter(criteria);
+    }
+
+    private void checkTidinessBeforeFilter() {
+        if (!this.isTidy) {
+            System.out.println("Warning: Filtering untidy data might yield incorrect results.");
+        }
+    }
+
+    private void applyFilter(String criteria) {
+        System.out.println("Filtering database (ID: " + id + ") by criteria: [" + criteria + "]");
+        System.out.println("Filter applied. Returning subset of " + size + " rows.");
     }
 
     public int getId() {
@@ -38,11 +81,7 @@ public class Database {
         return lastUpdate;
     }
 
-    public void cleanData(){
-
-    }
-
-    public void filterBy(){
-
+    public FileType getFileType() {
+        return fileType;
     }
 }

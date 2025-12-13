@@ -2,58 +2,52 @@ package es.ulpgc.hpi.p3.projectimplementation;
 
 import java.util.List;
 
+/**
+ * Represents a customer or client entity within the system.
+ * This class manages the customer's profile, including their subscription status,
+ * financial balance, and industry details. It serves as the primary link between
+ * the client organization and their assigned consultant.
+ */
+
 public class Customer {
-    private static int ID = 0;
-    private final int id;
-    private final String name;
-    private final String email;
-    private int tenure;
+    private static int NEXT_ID = 0;
+
+    private final int customerID;
     private double economicBalance;
-    private List<Employee> employeeList;
+    private final String name;
+    private int tenure;
     private final String industry;
 
-    public Customer(String name, String email, List<Employee> employees, String industry, int tenure) {
-        this.id = ++ID;
+    private SubscriptionPlan subscriptionPlan;
+    private Consultant assignedConsultant;
+
+
+    public Customer(String name, String industry, int tenure,
+                    SubscriptionPlan plan, Consultant consultant,
+                    List<Employee> initialEmployees) {
+        this.customerID = ++NEXT_ID;
         this.name = name;
-        this.email = email;
-        employeeList = employees;
         this.industry = industry;
         this.tenure = tenure;
+        this.subscriptionPlan = plan;
+        this.assignedConsultant = consultant;
+        this.economicBalance = 0.0;
+
     }
 
-    public void updateEconomicBalance(double economicBalance) {
-        this.economicBalance = economicBalance;
+    public void updateRevenue(double amount) {
+        this.economicBalance += amount;
     }
 
-    public void setEmployees(List<Employee> employees) {
-        employeeList = employees;
+    public void upgradeSubscription(SubscriptionPlan newPlan) {
+        this.subscriptionPlan = newPlan;
     }
 
-    public static int getID() {
-        return ID;
+    public int getCustomerID() { return customerID; }
+    public String getName() { return name; }
+
+    public Consultant getAssignedConsultant() {
+        return assignedConsultant;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public double getEconomicBalance() {
-        return economicBalance;
-    }
-
-    public List<Employee> getEmployees() {
-        return employeeList;
-    }
-
-    public String getIndustry() {
-        return industry;
-    }
-
-    public int getTenure() {
-        return tenure;
-    }
 }

@@ -1,63 +1,61 @@
 package es.ulpgc.hpi.p3.projectimplementation;
 
-public class Employee {
-    private static int ID = 0;
-    private final int id;
-    private final String name, surname;
-    private final String email;
-    private final Customer Company;
-    private String department;
-    private String role;
-    private Double tenure;
+import java.time.LocalDate;
+import java.time.Period;
 
-    public Employee(String name, String surname, String email, Customer company, String department, String role, Double tenure) {
-        this.id = ++ID;
+/**
+ * Represents an employee within the organization.
+ This class encapsulates the employee's personal information, professional role,
+ * and compensation details. It serves as the central entity for managing
+ * employment status, including promotions, department transfers, and tenure calculation.
+ */
+public class Employee {
+    private static int NEXT_ID = 0;
+
+    private final int employeeID;
+    private final String name;
+    private final String surname;
+    private final LocalDate hireDate;
+    private final Email email;
+    private String role;
+    private double salary;
+    private String department;
+
+    // Constructor
+    public Employee(String name, String surname, LocalDate hireDate, Email email,
+                    String role, double salary, String department) {
+        this.employeeID = ++NEXT_ID;
         this.name = name;
         this.surname = surname;
+        this.hireDate = hireDate;
         this.email = email;
-        Company = company;
-        this.department = department;
         this.role = role;
-        this.tenure = tenure;
-    }
-
-    public void changeDepartment(String department) {
+        this.salary = salary;
         this.department = department;
     }
 
-    public void promote(String role) {
-        this.role = role;
+    public int getYearsOfService() {
+        if (hireDate == null) return 0;
+        return Period.between(hireDate, LocalDate.now()).getYears();
     }
 
-    public int getId() {
-        return id;
+    public void promote(String newRole, double newSalary) {
+        this.role = newRole;
+        this.salary = newSalary;
     }
 
-    public String getName() {
-        return name;
+    public void changeDepartment(String newDepartment) {
+        this.department = newDepartment;
     }
 
-    public String getSurname() {
-        return surname;
+    public void updateSalary(double newSalary) {
+        this.salary = newSalary;
     }
 
-    public String getEmail() {
-        return email;
-    }
+    public int getEmployeeID() { return employeeID; }
 
-    public Customer getCompany() {
-        return Company;
-    }
-
-    public String getDepartment() {
-        return department;
-    }
-
-    public String getRole() {
-        return role;
-    }
-
-    public Double getTenure() {
-        return tenure;
+    @Override
+    public String toString() {
+        return name + " " + surname + " (" + role + ")";
     }
 }

@@ -17,12 +17,14 @@ public class Main {
     private static final Scanner scanner = new Scanner(System.in);
     private static final String ADMIN_PASSWORD = "admin123";
 
+    // ================= MAIN =================
+
     public static void main(String[] args) {
         boolean exit = false;
 
         while (!exit) {
             printMainMenu();
-            int option = readInt("Choose an option: ");
+            int option = readIntSafe("Choose an option: ");
 
             switch (option) {
                 case 1 -> employeeMenu();
@@ -33,10 +35,10 @@ public class Main {
                 case 6 -> saveToFile();
                 case 7 -> loadFromFile();
                 case 0 -> exit = true;
-                default -> System.out.println("Invalid option");
+                default -> System.out.println("Invalid option.");
             }
         }
-        System.out.println("Bye 👋");
+        System.out.println("Bye");
     }
 
     // ================= MENUS =================
@@ -64,7 +66,7 @@ public class Main {
                 0. Back
                 """);
 
-        int option = readInt("Option: ");
+        int option = readIntSafe("Option: ");
         switch (option) {
             case 1 -> addEmployee();
             case 2 -> listEmployees();
@@ -80,7 +82,7 @@ public class Main {
                 0. Back
                 """);
 
-        int option = readInt("Option: ");
+        int option = readIntSafe("Option: ");
         if (option == 1) addCustomer();
         else if (option == 2) listCustomers();
     }
@@ -93,7 +95,7 @@ public class Main {
                 0. Back
                 """);
 
-        int option = readInt("Option: ");
+        int option = readIntSafe("Option: ");
         if (option == 1) addDatabase();
         else if (option == 2) listDatabases();
     }
@@ -106,7 +108,7 @@ public class Main {
                 0. Back
                 """);
 
-        int option = readInt("Option: ");
+        int option = readIntSafe("Option: ");
         if (option == 1) addAnalysis();
         else if (option == 2) listAnalysis();
     }
@@ -119,7 +121,7 @@ public class Main {
                 0. Back
                 """);
 
-        int option = readInt("Option: ");
+        int option = readIntSafe("Option: ");
         if (option == 1) addConsultant();
         else if (option == 2) listConsultants();
     }
@@ -130,41 +132,44 @@ public class Main {
         employeeList.add(new Employee(
                 readString("Name: "),
                 readString("Surname: "),
-                LocalDate.parse(readString("Birth date (YYYY-MM-DD): ")),
-                new Email(readString("Email: ")),
+                readDate("Hire date (YYYY-MM-DD): "),
+                readEmail("Email: "),
                 readString("Role: "),
-                readDouble("Salary: "),
+                readDoubleSafe("Salary: "),
                 readString("Department: ")
         ));
+        System.out.println("Employee added");
     }
 
     private static void addCustomer() {
         customerList.add(new Customer(
                 readString("Name: "),
-                readString("Surname: "),
-                readInt("Age: "),
-                SubscriptionPlan.valueOf(readString("Plan: ").toUpperCase()),
-                new ArrayList<>()
+                readString("Sector: "),
+                readIntSafe("Tenure: "),
+                readEnum(SubscriptionPlan.class, "Subscription plan: ")
         ));
+        System.out.println("Customer added");
     }
 
     private static void addDatabase() {
         databaseList.add(new Database(
                 Boolean.parseBoolean(readString("Active (true/false): ")),
-                readInt("Size: "),
+                readIntSafe("Size: "),
                 readString("Name: "),
-                LocalDate.parse(readString("Date (YYYY-MM-DD): ")),
-                FileType.valueOf(readString("File type: ").toUpperCase())
+                readDate("Date (YYYY-MM-DD): "),
+                readEnum(FileType.class, "File type: ")
         ));
+        System.out.println("Database added");
     }
 
     private static void addConsultant() {
         consultantList.add(new Consultant(
                 readString("Name: "),
                 readString("Surname: "),
-                new Email(readString("Email: ")),
+                readEmail("Email: "),
                 readString("Specialty: ")
         ));
+        System.out.println("Consultant added");
     }
 
     private static void addAnalysis() {
@@ -173,35 +178,51 @@ public class Main {
 
     // ================= LIST =================
 
+    private static <T> void listOrEmpty(List<T> list, String msg) {
+        if (list.isEmpty()) {
+            System.out.println(msg);
+            return;
+        }
+        list.forEach(System.out::println);
+    }
+
     private static void listEmployees() {
-        employeeList.forEach(System.out::println);
+        listOrEmpty(employeeList, "There are no employees registered.");
     }
 
     private static void listCustomers() {
-        customerList.forEach(System.out::println);
+        listOrEmpty(customerList, "There are no customers registered.");
     }
 
     private static void listDatabases() {
-        databaseList.forEach(System.out::println);
+        listOrEmpty(databaseList, "There are no databases registered.");
     }
 
     private static void listAnalysis() {
-        analysisList.forEach(System.out::println);
+        listOrEmpty(analysisList, "There are no analyses registered.");
     }
 
     private static void listConsultants() {
-        consultantList.forEach(System.out::println);
+        listOrEmpty(consultantList, "There are no consultants registered.");
     }
 
     // ================= DELETE =================
 
     private static void deleteEmployee() {
         if (!checkPassword()) return;
+
+        if (employeeList.isEmpty()) {
+            System.out.println("There are no employees to delete.");
+            return;
+        }
+
         listEmployees();
-        int index = readInt("Index to delete: ");
+        int index = readIntSafe("Index to delete: ");
+
         if (index >= 0 && index < employeeList.size()) {
-            employeeList.remove(index);
-            System.out.println("Employee deleted ✔");
+            System.out.println(employeeList.remove(index) + " deleted.");
+        } else {
+            System.out.println("Invalid index.");
         }
     }
 
@@ -217,37 +238,29 @@ public class Main {
         try (PrintWriter pw = new PrintWriter(path)) {
 
             for (Employee e : employeeList) {
-                pw.println("EMPLOYEE;" +
-                        e.getName() + ";" +
-                        e.getSurname() + ";" +
-                        e.getHireDate() + ";" +
-                        e.getEmail() + ";" +
-                        e.getRole() + ";" +
-                        e.getSalary() + ";" +
-                        e.getDepartment());
+                pw.println("EMPLOYEE;" + e.getName() + ";" + e.getSurname() + ";" +
+                        e.getHireDate() + ";" + e.getEmail() + ";" +
+                        e.getRole() + ";" + e.getSalary() + ";" + e.getDepartment());
             }
 
             for (Customer c : customerList) {
-                pw.println("CUSTOMER;" +
-                        c.getName() + ";" +
-                        c.getTenure() + ";" +
-                        c.getSubscriptionPlan());
+                pw.println("CUSTOMER;" + c.getName() + ";" +
+                        c.getTenure() + ";" + c.getSubscriptionPlan());
             }
 
-            System.out.println("Saved ✔");
+            System.out.println("Saved");
 
         } catch (Exception e) {
-            System.out.println("Error saving file ❌");
+            System.out.println("Error saving file");
         }
     }
-
 
     private static void loadFromFile() {
         String path = readString("Enter file path: ");
         File file = new File(path);
 
         if (!file.exists()) {
-            System.out.println("File not found ❌");
+            System.out.println("File not found");
             return;
         }
 
@@ -258,31 +271,27 @@ public class Main {
             while (sc.hasNextLine()) {
                 String[] p = sc.nextLine().split(";");
 
-                switch (p[0]) {
-                    case "EMPLOYEE" ->
-                            employeeList.add(new Employee(
-                                    p[1], p[2], LocalDate.parse(p[3]),
-                                    new Email(p[4]), p[5],
-                                    Double.parseDouble(p[6]), p[7]
-                            ));
-
-                    case "CUSTOMER" ->
-                            customerList.add(new Customer(
-                                    p[1], p[2],
-                                    Integer.parseInt(p[3]),
-                                    SubscriptionPlan.valueOf(p[4]),
-                                    new ArrayList<>()
-                            ));
+                if (p[0].equals("EMPLOYEE")) {
+                    employeeList.add(new Employee(
+                            p[1], p[2], LocalDate.parse(p[3]),
+                            new Email(p[4]), p[5],
+                            Double.parseDouble(p[6]), p[7]
+                    ));
+                } else if (p[0].equals("CUSTOMER")) {
+                    customerList.add(new Customer(
+                            p[1], p[2],
+                            Integer.parseInt(p[3]),
+                            SubscriptionPlan.valueOf(p[4])
+                    ));
                 }
             }
 
-            System.out.println("Loaded ✔");
+            System.out.println("Loaded");
 
         } catch (Exception e) {
-            System.out.println("Error loading file ❌");
+            System.out.println("Error loading file");
         }
     }
-
 
     // ================= UTIL =================
 
@@ -291,11 +300,58 @@ public class Main {
         return scanner.nextLine();
     }
 
-    private static int readInt(String msg) {
-        return Integer.parseInt(readString(msg));
+    private static int readIntSafe(String msg) {
+        while (true) {
+            try {
+                return Integer.parseInt(readString(msg));
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid integer.");
+            }
+        }
     }
 
-    private static double readDouble(String msg) {
-        return Double.parseDouble(readString(msg));
+    private static double readDoubleSafe(String msg) {
+        while (true) {
+            try {
+                return Double.parseDouble(readString(msg));
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid number.");
+            }
+        }
+    }
+
+    private static LocalDate readDate(String msg) {
+        while (true) {
+            try {
+                return LocalDate.parse(readString(msg));
+            } catch (Exception e) {
+                System.out.println("Invalid date format (YYYY-MM-DD).");
+            }
+        }
+    }
+
+    private static Email readEmail(String msg) {
+        while (true) {
+            try {
+                return new Email(readString(msg));
+            } catch (IllegalArgumentException e) {
+                System.out.println("Invalid email format.");
+            }
+        }
+    }
+
+    private static <T extends Enum<T>> T readEnum(Class<T> enumClass, String msg) {
+        while (true) {
+            System.out.println("Available options:");
+            for (T c : enumClass.getEnumConstants()) {
+                System.out.println(" - " + c.name());
+            }
+
+            try {
+                return Enum.valueOf(enumClass, readString(msg).toUpperCase());
+            } catch (IllegalArgumentException e) {
+                System.out.println("Invalid option.");
+            }
+        }
     }
 }

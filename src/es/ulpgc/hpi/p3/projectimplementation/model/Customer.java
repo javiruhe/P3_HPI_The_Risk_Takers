@@ -1,5 +1,6 @@
 package es.ulpgc.hpi.p3.projectimplementation.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -20,18 +21,18 @@ public class Customer {
 
     private SubscriptionPlan subscriptionPlan;
     private Consultant assignedConsultant;
+    private List<Employee> employeeList;
 
 
     public Customer(String name, String industry, int tenure,
-                    SubscriptionPlan plan,
-                    List<Employee> initialEmployees) {
+                    SubscriptionPlan plan) {
         this.customerID = ++NEXT_ID;
         this.name = name;
         this.industry = industry;
         this.tenure = tenure;
         this.subscriptionPlan = plan;
         this.economicBalance = 0.0;
-
+        this.employeeList = new ArrayList<>();
     }
 
     public void updateRevenue(double amount) {
@@ -68,5 +69,13 @@ public class Customer {
     public Consultant getAssignedConsultant() {
         return assignedConsultant;
     }
+
+    @Override
+    public String toString() {
+        return "Name:'" + name + '\'' +
+                ", Sector:'" + industry + '\'' +
+                ", Employees:" + employeeList.size();
+    }
+
 
 }

@@ -45,7 +45,7 @@ A console-based Java application for managing employees, customers, databases, a
 1. Clone the repository:  
 
    ```bash
-   git clone https://github.com/yourusername/sme-analytics-platform.git
+   git clone https://github.com/yourusername/P3_HPI_The_Risk_Takers.git
 
 2. Open in your favorite IDE (Eclipse, IntelliJ, VS Code).
 
@@ -97,6 +97,13 @@ Example of the Main Menu:
 EMPLOYEE;John;Doe;2023-01-01;john.doe@email.com;Developer;50000;IT
 CUSTOMER;Acme Corp;Technology;3;PREMIUM
 ```
+---
+
+## UML Diagram
+
+* The following UML diagram represents the main classes and their relationships in the SME Analytics Platform:
+
+![UML Diagram](uml-diagram.svg)
 
 ---
 

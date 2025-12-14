@@ -54,6 +54,34 @@ public class Employee {
 
     public int getEmployeeID() { return employeeID; }
 
+    public String getName() {
+        return name;
+    }
+
+    public String getSurname() {
+        return surname;
+    }
+
+    public LocalDate getHireDate() {
+        return hireDate;
+    }
+
+    public Email getEmail() {
+        return email;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public double getSalary() {
+        return salary;
+    }
+
+    public String getDepartment() {
+        return department;
+    }
+
     @Override
     public String toString() {
         return name + " " + surname + " (" + role + ")";

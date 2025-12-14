@@ -45,6 +45,22 @@ public class Customer {
     public int getCustomerID() { return customerID; }
     public String getName() { return name; }
 
+    public double getEconomicBalance() {
+        return economicBalance;
+    }
+
+    public int getTenure() {
+        return tenure;
+    }
+
+    public String getIndustry() {
+        return industry;
+    }
+
+    public SubscriptionPlan getSubscriptionPlan() {
+        return subscriptionPlan;
+    }
+
     public void setAssignedConsultant(Consultant assignedConsultant) {
         this.assignedConsultant = assignedConsultant;
     }

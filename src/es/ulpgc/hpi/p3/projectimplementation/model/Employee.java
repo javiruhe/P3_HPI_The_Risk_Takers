@@ -1,4 +1,4 @@
-package es.ulpgc.hpi.p3.projectimplementation;
+package es.ulpgc.hpi.p3.projectimplementation.model;
 
 import java.time.LocalDate;
 import java.time.Period;

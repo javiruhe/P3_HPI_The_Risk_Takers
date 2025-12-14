@@ -1,4 +1,4 @@
-package es.ulpgc.hpi.p3.projectimplementation;
+package es.ulpgc.hpi.p3.projectimplementation.model;
 
 import java.util.List;
 
@@ -23,14 +23,13 @@ public class Customer {
 
 
     public Customer(String name, String industry, int tenure,
-                    SubscriptionPlan plan, Consultant consultant,
+                    SubscriptionPlan plan,
                     List<Employee> initialEmployees) {
         this.customerID = ++NEXT_ID;
         this.name = name;
         this.industry = industry;
         this.tenure = tenure;
         this.subscriptionPlan = plan;
-        this.assignedConsultant = consultant;
         this.economicBalance = 0.0;
 
     }
@@ -45,6 +44,10 @@ public class Customer {
 
     public int getCustomerID() { return customerID; }
     public String getName() { return name; }
+
+    public void setAssignedConsultant(Consultant assignedConsultant) {
+        this.assignedConsultant = assignedConsultant;
+    }
 
     public Consultant getAssignedConsultant() {
         return assignedConsultant;

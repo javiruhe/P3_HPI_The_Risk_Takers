@@ -1,6 +1,6 @@
-package es.ulpgc.hpi.p3.projectimplementation;
+package es.ulpgc.hpi.p3.projectimplementation.model;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 /**
  * Represents a dataset with metadata such as source path, size, and update status.
@@ -13,12 +13,12 @@ public class Database {
     private final int id;
     private final int size;
     private final String sourcePath;
-    private final Date lastUpdate;
+    private final LocalDate lastUpdate;
     private final FileType fileType;
 
     private Boolean isTidy;
 
-    public Database(Boolean isTidy, int size, String sourcePath, Date lastUpdate, FileType fileType) {
+    public Database(Boolean isTidy, int size, String sourcePath, LocalDate lastUpdate, FileType fileType) {
         this.id = ++ID;
         this.isTidy = isTidy;
         this.size = size;
@@ -77,7 +77,7 @@ public class Database {
         return sourcePath;
     }
 
-    public Date getLastUpdate() {
+    public LocalDate getLastUpdate() {
         return lastUpdate;
     }
 

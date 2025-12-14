@@ -38,7 +38,7 @@ public class Main {
                 default -> System.out.println("Invalid option.");
             }
         }
-        System.out.println("Bye");
+        System.out.println("Program terminated. Thank you for using SME Analytics Platform.");
     }
 
     // ================= MENUS =================
@@ -348,7 +348,7 @@ public class Main {
             }
 
             try {
-                return Enum.valueOf(enumClass, readString(msg).toUpperCase());
+                return Enum.valueOf(enumClass, readString(msg));
             } catch (IllegalArgumentException e) {
                 System.out.println("Invalid option.");
             }
